@@ -6,7 +6,7 @@ router.get(
     "/:userId",
     asyncHandler(async (req, res) => {
       const { userId } = req.params;
-  
+      console.log("Received request to update comment:",userId);
       // Lấy danh sách songId từ YourAlbum
       const userAlbums = await YourAlbum.findAll({
         where: { userId },

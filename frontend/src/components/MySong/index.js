@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import Navigation from "../Navigation";
+import './MySong.css';
+
 
 export default function MySong({ isLoaded }) {
   const [songs, setSongs] = useState([]);

@@ -50,8 +50,12 @@ router.delete(
   "/delete",
   asyncHandler(async (req, res) => {
     const { commentId, songId, userId } = req.body;
-    const comment = await Comment.findByPk(commentId);
-    if (userId !== comment.userId) return;
+    const comment = await Comment.findByPk(commentId);  
+if (!comment) {
+  return res.status(404).json({ message: "Comment not found!" });
+}
+
+    if (Number(userId) !== comment.userId) return;
 
     await comment.destroy();
 
@@ -74,11 +78,10 @@ router.put(
   asyncHandler(async (req, res) => {
     const { commentId, comment, songId, userId } = req.body;
     const commentUpdate = await Comment.findByPk(commentId);
-    if (userId !== commentUpdate.userId) return;
+    if (Number(userId) !== commentUpdate.userId)return ;
 
     commentUpdate.comment = comment;
     await commentUpdate.save();
-
     const comments = await Comment.findAll({
       where: { songId: songId },
       include: [

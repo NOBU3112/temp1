@@ -51,11 +51,9 @@ function Navigation({ isLoaded }) {
 
   // Kiểm tra khi người dùng nhấn nút Upload
   const handleUploadClick = () => {
-    if (!isPremium && songCount >= 1) {
-      alert("Bạn cần nâng cấp lên Premium để tải lên nhiều hơn 1 bài!");
-    } else {
+
       history.push("/upload"); // Dùng history.push để điều hướng tới trang upload
-    }
+    
   };
 
   let sessionLinks;

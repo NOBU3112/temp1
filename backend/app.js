@@ -39,9 +39,16 @@ const csrfProtection = csurf({
   },
 });
 
+// // 🔥 Chỉ bật CSRF trong production
+if (process.env.NODE_ENV === "production") {
+  app.use(csrfProtection);
+} else {
+  console.log("⚠️ CSRF Protection is disabled in development mode!");
+}
+
 // 🔹 Áp dụng CSRF middleware TRƯỚC KHI dùng req.csrfToken()
 app.use((req, res, next) => {
-  if (req.method === "GET" || req.method === "DELETE"||req.method === "POST") {
+  if (req.method === "GET" || req.method === "DELETE"||req.method === "POST"||req.method === "PUT") {
     return next();
   }
   return csrfProtection(req, res, next);
