@@ -11,11 +11,12 @@ export default function UploadForm() {
   const [genre, setGenre] = useState("");
   const [albumName, setAlbumName] = useState("");
   const [albumCover, setAlbumCover] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false); 
   const [audioFile, setAudioFile] = useState(null);
   const dispatch = useDispatch();
   const history = useHistory();
 
-  const songs = useSelector((state) => state.songsRed.songs);
+
   
       // 2️⃣ Gửi yêu cầu thêm bài hát vào danh sách của người dùng
       const sessionUser = useSelector((state) => state.session.user);
@@ -27,6 +28,8 @@ export default function UploadForm() {
           return;
         }
       
+        setIsSubmitting(true);
+
         const song = {
           title,
           artist,
@@ -47,6 +50,7 @@ export default function UploadForm() {
           // Kiểm tra nếu không có newSong hoặc id của bài hát
           if (!newSong || !newSong.id) {
             alert("Lỗi khi tạo bài hát!");
+            setIsSubmitting(false);
             return;
           }
       
@@ -65,13 +69,15 @@ export default function UploadForm() {
           // Xử lý kết quả trả về từ API mysong
           if (data.error) {
             alert(`❌ Lỗi: ${data.error}`);
+            setIsSubmitting(false);
           } else {
             alert("✅ Bài hát đã được thêm vào danh sách của bạn!");
-            history.push("/dashboard");
+            history.push(`/mysong/${sessionUser.id}`);
           }
         } catch (error) {
           console.error("Lỗi khi upload bài hát:", error);
           alert("❌ Đã xảy ra lỗi khi thêm bài hát!");
+          setIsSubmitting(false);
         }
       };
       
@@ -130,8 +136,8 @@ export default function UploadForm() {
             id="audio__input"
             required
           />
-          <button className="uploadBtn" type="submit">
-            Submit
+          <button className="uploadBtn" type="submit" disabled={isSubmitting}>
+            {isSubmitting ? "Đang gửi..." : "Submit"} 
           </button>
         </form>
       </div>

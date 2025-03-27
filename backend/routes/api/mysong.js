@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const asyncHandler = require("express-async-handler");
 const { MySong, Song } = require("../../db/models");
+const { where } = require("sequelize");
 router.get(
     "/:userId",
     asyncHandler(async (req, res) => {
@@ -86,13 +87,18 @@ router.delete(
 
     // Kiểm tra xem bài hát có trong danh sách không
     const mySongEntry = await MySong.findOne({ where: { userId, songId } });
+    const SongEntry = await Song.findOne({where:{id:songId}});
 
     if (!mySongEntry) {
+      return res.status(404).json({ error: "Bài hát không tồn tại trong danh sách của bạn." });
+    }
+    if (!SongEntry) {
       return res.status(404).json({ error: "Bài hát không tồn tại trong danh sách của bạn." });
     }
 
     // Xóa bài hát khỏi danh sách
     await mySongEntry.destroy();
+    await SongEntry.destroy();
     return res.json({ message: "Đã xóa bài hát khỏi danh sách của bạn." });
   })
 );
